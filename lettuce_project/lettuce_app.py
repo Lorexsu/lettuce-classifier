@@ -5,7 +5,7 @@ import datetime
 import pandas as pd
 
 # Load YOLO model (make sure best.pt is in same folder or adjust path)
-model = YOLO("lettuce_project/best.pt")
+model = YOLO("lettuce_project\best.pt")
 
 # Initialize session state for history
 if "history" not in st.session_state:
@@ -93,3 +93,4 @@ with tab3:
     The system aims to assist hydroponic farmers by providing an **automated decision support tool**, 
     reducing manual inspection effort and improving harvest accuracy.
     """)
+
