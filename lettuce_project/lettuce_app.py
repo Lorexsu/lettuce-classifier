@@ -4,7 +4,7 @@ from PIL import Image
 import datetime
 
 # Load trained YOLO model
-model = YOLO("C:/Users/Rolex Jr/OneDrive/Desktop/lettuce_model_thesis/runs/detect/lettuce_ready_new4/weights/best.pt")
+model = YOLO("lettuce_project/best.pt")
 
 # --- Tab Layout ---
 tab1, tab2 = st.tabs(["🌿 Classification", "ℹ️ About"])
@@ -59,3 +59,4 @@ with tab2:
     The system aims to assist hydroponic farmers by providing an **automated decision support tool**, 
     reducing manual inspection effort and improving harvest accuracy.
     """)
+
