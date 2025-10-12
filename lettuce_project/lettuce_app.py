@@ -122,11 +122,20 @@ if page == "classification":
                 label = results[0].names[cls_id]
 
                 st.subheader("Result")
-                st.write(f"🥬 **Classification:** {label}")
+                st.markdown(f"<p style='color:#064420; font-size:18px; font-weight:600;'>🥬 Classification: {label}</p>", unsafe_allow_html=True)
                 st.progress(conf)
-                st.write(f"<p style='color:#064420;'>📊 Confidence: {conf:.2f}")
-                st.write(f"<p style='color:#064420;'>📅 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-                st.info("<p style='color:#064420;'>💡 Lettuce typically matures in 30–60 days.")
+                st.markdown(f"<p style='color:#064420; font-size:16px;'>📊 Confidence: {conf:.2f}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='color:#064420; font-size:16px;'>📅 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>", unsafe_allow_html=True)
+                # Custom green info box
+                st.markdown(
+                    """
+                    <div style='background-color:#EAF4EA; border-left: 6px solid #064420; padding:10px; border-radius:8px; color:#064420;'>
+                        💡 Lettuce typically matures in 30–60 days.
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+                
                 st.session_state.history.append({
                     "Date/Time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                     "Image Name": uploaded_file.name,
@@ -167,6 +176,7 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
