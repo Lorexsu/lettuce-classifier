@@ -124,9 +124,9 @@ if page == "classification":
                 st.subheader("Result")
                 st.write(f"🥬 **Classification:** {label}")
                 st.progress(conf)
-                st.write(f"📊 Confidence: {conf:.2f}")
-                st.write(f"📅 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-                st.info("💡 Lettuce typically matures in 30–60 days.")
+                st.write(f"<p style='color:#064420;'>📊 Confidence: {conf:.2f}")
+                st.write(f"<p style='color:#064420;'>📅 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                st.info("<p style='color:#064420;'>💡 Lettuce typically matures in 30–60 days.")
                 st.session_state.history.append({
                     "Date/Time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                     "Image Name": uploaded_file.name,
@@ -167,6 +167,7 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
