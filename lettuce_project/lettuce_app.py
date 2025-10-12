@@ -112,9 +112,9 @@ if page == "classification":
     if uploaded_file:
         image = Image.open(uploaded_file)
         
-        col1, col2 = st.columns([1.2,1])
+        col1, col2 = st.columns([1.3,1.7])
         with col1:
-            st.image(image, caption="Uploaded Image", width=450)
+            st.image(image, caption="Uploaded Image", use_column_width=True)
         with col2:
             results = model.predict(image, conf=0.5)
             if len(results) > 0 and len(results[0].boxes) > 0:
@@ -178,6 +178,7 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
