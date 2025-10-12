@@ -21,11 +21,7 @@ body {
     color: #064420;
     font-family: 'Helvetica', sans-serif;
 }
-header, footer {display:none;}
-.main {
-    background-color: #ffffff;
-    padding: 0;
-    margin: 0;
+header, footer {visibility: hidden;}
 }
 .nav-bar {
     background-color: #064420;
