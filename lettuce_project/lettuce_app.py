@@ -37,6 +37,11 @@ header, footer {display:none;}
     align-items: center;
     font-weight: 600;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
 }
 .nav-links a {
     color: white;
@@ -149,3 +154,4 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
