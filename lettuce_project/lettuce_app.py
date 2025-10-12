@@ -7,7 +7,7 @@ import pandas as pd
 # Load YOLO model
 model = YOLO("lettuce_project/best.pt")
 
-# Initialize history
+# Initialize session state
 if "history" not in st.session_state:
     st.session_state.history = []
 if "page" not in st.session_state:
@@ -16,16 +16,18 @@ if "page" not in st.session_state:
 # ---------- CUSTOM CSS ----------
 st.markdown("""
 <style>
-/* ----- LAYOUT RESET ----- */
+/* ----- GENERAL PAGE SETUP ----- */
 body {
-    background-color: #ffffff;
-    color: #064420;
+    background-color: #ffffff !important;
+    color: #064420 !important;
     font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
 }
-
-/* Hide Streamlit’s default header and footer */
+[data-testid="stAppViewContainer"] {
+    background-color: #ffffff !important;
+}
+[data-testid="stHeader"] {
+    background: none;
+}
 header, footer {visibility: hidden;}
 
 /* ----- FIXED HEADER ----- */
@@ -46,8 +48,9 @@ header, footer {visibility: hidden;}
     z-index: 100;
 }
 .logo {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 700;
+    color: white;
 }
 .nav-links {
     display: flex;
@@ -63,9 +66,9 @@ header, footer {visibility: hidden;}
 }
 .button-link:hover {text-decoration: underline;}
 
-/* ----- MAIN CONTENT AREA ----- */
+/* ----- MAIN CONTENT ----- */
 .main-content {
-    margin-top: 110px;   /* space below fixed header */
+    margin-top: 110px;   /* space below header */
     margin-bottom: 100px; /* space above footer */
     padding: 2rem 3rem;
     background-color: #ffffff;
@@ -105,13 +108,15 @@ h1, h2, h3, h4, h5, h6, p, span, label, div {
   </div>
 </div>
 """, unsafe_allow_html=True)
-# Capture button clicks
+
+# ---------- PAGE LOGIC ----------
 nav = st.query_params.get("nav")
 if nav:
     st.session_state.page = nav
-
-# ---------- PAGE CONTENT ----------
 page = st.session_state.page
+
+# ---------- MAIN CONTENT ----------
+st.markdown('<div class="main-content">', unsafe_allow_html=True)
 
 if page == "classification":
     st.title("🌿 Lettuce Readiness Classification")
@@ -120,7 +125,7 @@ if page == "classification":
         image = Image.open(uploaded_file)
         col1, col2 = st.columns([1,1])
         with col1:
-            st.image(image, caption="Uploaded Image", width=300)
+            st.image(image, caption="Uploaded Image", width=350)
         with col2:
             results = model.predict(image, conf=0.5)
             if len(results) > 0 and len(results[0].boxes) > 0:
@@ -130,10 +135,10 @@ if page == "classification":
                 label = results[0].names[cls_id]
 
                 st.subheader("Result")
-                st.write(f"🥬 **Classification:** {label}")
+                st.markdown(f"<b>🥬 Classification:</b> <span style='color:#064420;'>{label}</span>", unsafe_allow_html=True)
                 st.progress(conf)
-                st.write(f"📊 Confidence: {conf:.2f}")
-                st.write(f"📅 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                st.markdown(f"<b>📊 Confidence:</b> {conf:.2f}")
+                st.markdown(f"<b>📅 Date:</b> {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
                 st.info("💡 Lettuce typically matures in 30–60 days.")
                 st.session_state.history.append({
                     "Date/Time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -158,16 +163,18 @@ elif page == "about":
     st.title("ℹ️ About This System")
     st.markdown("""
     ### 🧠 Lettuce Growth Classifier (YOLOv11)
-    A web-based system using **YOLOv11** to determine lettuce readiness.
+    This system uses **YOLOv11** to determine whether a lettuce is ready for harvest.
 
-    **Features**
-    - 🌿 Real-time image classification  
-    - 📊 Result history tracking  
-    - 💾 Exportable CSV reports  
+    #### Features:
+    - 🌿 Real-time lettuce classification  
+    - 📊 Saves and exports classification history  
     - 🧩 Easy model updates  
 
-    **Tech stack:** Python · Streamlit · Ultralytics YOLO  
+    #### Built with:
+    Python · Streamlit · Ultralytics YOLO
     """)
+
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- FOOTER ----------
 st.markdown("""
@@ -175,4 +182,3 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
-
