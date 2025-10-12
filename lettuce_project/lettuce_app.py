@@ -107,7 +107,7 @@ page = st.session_state.page
 
 if page == "classification":
     st.title("🌿 Lettuce Readiness Classification")
-    st.markdown("<div style='margin-left:5%; margin-right:30%;'>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-left:5%; margin-right:45%;'>", unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Upload an image of lettuce", type=["jpg","jpeg","png"])
     if uploaded_file:
         image = Image.open(uploaded_file)
@@ -178,6 +178,7 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
