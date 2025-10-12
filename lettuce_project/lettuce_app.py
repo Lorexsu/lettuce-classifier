@@ -33,7 +33,7 @@ header, footer {visibility: hidden;}
 
 .nav-bar {
     background-color: #064420;
-    color: #064420;
+    color: #iwhite;
     padding: 1rem 2rem;
     font-size: 1.2rem;
     display: flex;
@@ -56,7 +56,12 @@ header, footer {visibility: hidden;}
 .nav-links a:hover {
     text-decoration: underline;
 }
-h1,h2,h3{color:#064420;}
+
+h1,h2,h3{
+
+color:#064420;
+
+}
 .footer {
     background-color: #064420;
     color: white;
@@ -72,7 +77,7 @@ h1,h2,h3{color:#064420;}
 .button-link {
     background: none!important;
     border: none;
-    color: white;
+    color: #064420;
     cursor: pointer;
     font-size: 1.1rem;
     margin-left: 2rem;
@@ -162,6 +167,7 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
