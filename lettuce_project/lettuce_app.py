@@ -21,8 +21,16 @@ body {
     color: #064420;
     font-family: 'Helvetica', sans-serif;
 }
-header, footer {visibility: hidden;}
+
+header, footer {display:none;}
+.main {
+    background-color: #ffffff;
+    padding: 0;
+    margin: 0;
 }
+
+header, footer {visibility: hidden;}
+
 .nav-bar {
     background-color: #064420;
     color: white;
@@ -150,4 +158,5 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
 
