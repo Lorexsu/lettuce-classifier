@@ -33,7 +33,7 @@ header, footer {visibility: hidden;}
 
 .nav-bar {
     background-color: #064420;
-    color: white;
+    color: #064420;
     padding: 1rem 2rem;
     font-size: 1.2rem;
     display: flex;
@@ -162,6 +162,7 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
