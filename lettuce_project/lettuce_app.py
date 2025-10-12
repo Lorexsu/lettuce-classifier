@@ -16,17 +16,19 @@ if "page" not in st.session_state:
 # ---------- CUSTOM CSS ----------
 st.markdown("""
 <style>
+/* ----- LAYOUT RESET ----- */
 body {
     background-color: #ffffff;
     color: #064420;
-    font-family: 'Helvetica', sans-serif;
-}
-header, footer {display:none;}
-.main {
-    background-color: #ffffff;
-    padding: 0;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
+    padding: 0;
 }
+
+/* Hide Streamlit’s default header and footer */
+header, footer {visibility: hidden;}
+
+/* ----- FIXED HEADER ----- */
 .nav-bar {
     background-color: #064420;
     color: white;
@@ -36,49 +38,73 @@ header, footer {display:none;}
     justify-content: space-between;
     align-items: center;
     font-weight: 600;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
 }
-.nav-links a {
+.logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+.button-link {
+    background: none;
+    border: none;
     color: white;
-    text-decoration: none;
-    margin-left: 2rem;
+    cursor: pointer;
+    font-size: 1.1rem;
     font-weight: 400;
 }
-.nav-links a:hover {
-    text-decoration: underline;
+.button-link:hover {text-decoration: underline;}
+
+/* ----- MAIN CONTENT AREA ----- */
+.main-content {
+    margin-top: 110px;   /* space below fixed header */
+    margin-bottom: 100px; /* space above footer */
+    padding: 2rem 3rem;
+    background-color: #ffffff;
 }
-h1,h2,h3{color:#064420;}
+
+/* ----- FOOTER ----- */
 .footer {
     background-color: #064420;
     color: white;
     text-align: center;
     padding: 1rem;
     font-size: 0.9rem;
-    margin-top: 3rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
-.button-link {
-    background: none!important;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 1.1rem;
-    margin-left: 2rem;
+
+/* ----- TEXT COLORS ----- */
+h1, h2, h3, h4, h5, h6, p, span, label, div {
+    color: #064420 !important;
 }
-.button-link:hover {text-decoration: underline;}
+.stProgress > div > div > div {
+    background-color: #2E8B57 !important;
+}
 </style>
 
+<!-- ----- NAVIGATION BAR ----- -->
 <div class="nav-bar">
   <div class="logo">🥬 Lettuce Classifier</div>
   <div class="nav-links">
-    <form action="#" method="get">
-      <button class="button-link" name="nav" value="classification">Classification</button>
-      <button class="button-link" name="nav" value="history">History</button>
-      <button class="button-link" name="nav" value="about">About</button>
-    </form>
+      <form action="#" method="get">
+          <button class="button-link" name="nav" value="classification">Classification</button>
+          <button class="button-link" name="nav" value="history">History</button>
+          <button class="button-link" name="nav" value="about">About</button>
+      </form>
   </div>
 </div>
 """, unsafe_allow_html=True)
-
 # Capture button clicks
 nav = st.query_params.get("nav")
 if nav:
@@ -149,3 +175,4 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
