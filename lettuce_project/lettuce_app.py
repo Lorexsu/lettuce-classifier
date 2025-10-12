@@ -77,7 +77,7 @@ color:#064420;
 .button-link {
     background: none!important;
     border: none;
-    color: #064420;
+    color: white;
     cursor: pointer;
     font-size: 1.1rem;
     margin-left: 2rem;
@@ -167,6 +167,7 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
