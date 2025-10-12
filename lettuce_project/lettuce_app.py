@@ -120,7 +120,7 @@ if page == "classification":
         with col2:
             results = model.predict(image, conf=0.5)
         st.markdown("</div>", unsafe_allow_html=True)
-            if len(results) > 0 and len(results[0].boxes) > 0:
+                if len(results) > 0 and len(results[0].boxes) > 0:
                 box = results[0].boxes[0]
                 cls_id = int(box.cls[0].item())
                 conf = float(box.conf[0].item())
@@ -181,6 +181,7 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
