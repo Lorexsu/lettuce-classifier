@@ -110,21 +110,21 @@ if page == "classification":
     uploaded_file = st.file_uploader("Upload an image of lettuce", type=["jpg","jpeg","png"])
     if uploaded_file:
         image = Image.open(uploaded_file)
-        # Slightly shift layout to the left (wider left column)
-        st.markdown("<div style='margin-left:5%; margin-right:10%;'>", unsafe_allow_html=True)
-        col1, col2 = st.columns([1.2, 0.8])
-        
-        with col1:
-            st.image(image, caption="Uploaded Image", width=320)
-        
-        with col2:
-            results = model.predict(image, conf=0.5)
-        st.markdown("</div>", unsafe_allow_html=True)
-            if len(results) > 0 and len(results[0].boxes) > 0:
-            box = results[0].boxes[0]
-            cls_id = int(box.cls[0].item())
-            conf = float(box.conf[0].item())
-            label = results[0].names[cls_id]
+            # Slightly shift layout to the left (wider left column)
+            st.markdown("<div style='margin-left:5%; margin-right:10%;'>", unsafe_allow_html=True)
+            col1, col2 = st.columns([1.2, 0.8])
+            
+            with col1:
+                st.image(image, caption="Uploaded Image", width=320)
+            
+            with col2:
+                results = model.predict(image, conf=0.5)
+            st.markdown("</div>", unsafe_allow_html=True)
+                if len(results) > 0 and len(results[0].boxes) > 0:
+                box = results[0].boxes[0]
+                cls_id = int(box.cls[0].item())
+                conf = float(box.conf[0].item())
+                label = results[0].names[cls_id]
 
                 st.subheader("Result")
                 st.markdown(f"<p style='color:#064420; font-size:18px; font-weight:600;'>🥬 Classification: {label}</p>", unsafe_allow_html=True)
@@ -181,6 +181,7 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
