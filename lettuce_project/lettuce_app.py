@@ -16,6 +16,7 @@ if "page" not in st.session_state:
 # ---------- CUSTOM CSS ----------
 st.markdown("""
 <style>
+/* --- GENERAL --- */
 body {
     background-color: #ffffff;
     color: #064420;
@@ -27,27 +28,44 @@ header, footer {display:none;}
     padding: 0;
     margin: 0;
 }
-.nav-bar {
+
+/* --- NAVIGATION BAR --- */
+.navbar {
     background-color: #064420;
     color: white;
     padding: 1rem 2rem;
-    font-size: 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-weight: 600;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-.nav-links a {
+.navbar-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+.nav-link {
     color: white;
     text-decoration: none;
-    margin-left: 2rem;
     font-weight: 400;
+    font-size: 1.1rem;
 }
-.nav-links a:hover {
+.nav-link:hover {
     text-decoration: underline;
 }
-h1,h2,h3{color:#064420;}
+
+/* --- HEADINGS & TEXT --- */
+h1, h2, h3, label, p, div, span {
+    color: #064420 !important;
+}
+.stProgress > div > div > div {
+    background-color: #064420 !important;
+}
+
+/* --- FOOTER --- */
 .footer {
     background-color: #064420;
     color: white;
@@ -56,30 +74,20 @@ h1,h2,h3{color:#064420;}
     font-size: 0.9rem;
     margin-top: 3rem;
 }
-.button-link {
-    background: none!important;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 1.1rem;
-    margin-left: 2rem;
-}
-.button-link:hover {text-decoration: underline;}
 </style>
 
-<div class="nav-bar">
-  <div class="logo">🥬 Lettuce Classifier</div>
-  <div class="nav-links">
-    <form action="#" method="get">
-      <button class="button-link" name="nav" value="classification">Classification</button>
-      <button class="button-link" name="nav" value="history">History</button>
-      <button class="button-link" name="nav" value="about">About</button>
-    </form>
-  </div>
+<!-- --- NAVIGATION BAR HTML --- -->
+<div class="navbar">
+    <div class="navbar-title">🥬 Lettuce Classifier</div>
+    <div class="nav-links">
+        <a class="nav-link" href="?nav=classification">Classification</a>
+        <a class="nav-link" href="?nav=history">History</a>
+        <a class="nav-link" href="?nav=about">About</a>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
-# Capture button clicks
+# Capture nav from query
 nav = st.query_params.get("nav")
 if nav:
     st.session_state.page = nav
@@ -104,10 +112,10 @@ if page == "classification":
                 label = results[0].names[cls_id]
 
                 st.subheader("Result")
-                st.write(f"🥬 **Classification:** {label}")
+                st.markdown(f"<b>🥬 Classification:</b> <span style='color:#064420;'>{label}</span>", unsafe_allow_html=True)
                 st.progress(conf)
-                st.write(f"📊 Confidence: {conf:.2f}")
-                st.write(f"📅 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+                st.markdown(f"<b>📊 Confidence:</b> <span style='color:#064420;'>{conf:.2f}</span>", unsafe_allow_html=True)
+                st.markdown(f"<b>📅 Date:</b> {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
                 st.info("💡 Lettuce typically matures in 30–60 days.")
                 st.session_state.history.append({
                     "Date/Time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
