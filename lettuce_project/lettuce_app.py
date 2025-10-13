@@ -7,160 +7,114 @@ import pandas as pd
 # Load YOLO model
 model = YOLO("lettuce_project/best.pt")
 
-# Initialize session states
+# Initialize history
 if "history" not in st.session_state:
     st.session_state.history = []
 if "page" not in st.session_state:
-    st.session_state.page = "home"
+    st.session_state.page = "classification"
 
 # ---------- CUSTOM CSS ----------
 st.markdown("""
 <style>
 body {
-    background-color: #f0fdf4;
+    background-color: #ffffff;
     color: #064420;
     font-family: 'Helvetica', sans-serif;
 }
-header, footer {display: none;}
+
+header, footer {display:none;}
 .main {
-    background-color: #f0fdf4;
+    background-color: #ffffff;
     padding: 0;
     margin: 0;
 }
 
-/* NAVBAR */
+header, footer {visibility: hidden;}
+
 .nav-bar {
-    background-color: white;
+    background-color: #064420;
+    color: #iwhite;
     padding: 1rem 2rem;
+    font-size: 1.2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     position: fixed;
-    width: 100%;
     top: 0;
     left: 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    right: 0;
     z-index: 100;
 }
-.nav-logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #15803d;
-    display: flex;
-    align-items: center;
-}
-.nav-logo span {
-    margin-left: 0.5rem;
-}
 .nav-links a {
-    color: #064420;
+    color: white;
     text-decoration: none;
-    margin-left: 1.5rem;
-    font-weight: 500;
+    margin-left: 2rem;
+    font-weight: 400;
 }
 .nav-links a:hover {
-    color: #16a34a;
+    text-decoration: underline;
 }
 
-/* HERO */
-.hero {
-    background: linear-gradient(90deg, #15803d, #22c55e);
-    color: white;
-    text-align: center;
-    padding: 8rem 2rem 6rem 2rem;
-    margin-top: 60px;
-}
-.hero h1 {
-    font-size: 3rem;
-    font-weight: 700;
-}
-.hero p {
-    font-size: 1.2rem;
-    margin-top: 1rem;
-    color: #e0ffe9;
-}
-.hero a {
-    background: white;
-    color: #15803d;
-    padding: 0.8rem 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    text-decoration: none;
-    margin-top: 2rem;
-    display: inline-block;
-}
-.hero a:hover {
-    background: #dcfce7;
-}
+h1,h2,h3{
 
-/* FOOTER */
+color:#064420;
+
+}
 .footer {
     background-color: #064420;
     color: white;
     text-align: center;
     padding: 1rem;
     font-size: 0.9rem;
-    margin-top: 4rem;
+    margin-top: 3rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
-
-/* CONTENT SECTIONS */
-.section {
-    background: white;
-    padding: 4rem 2rem;
-    margin: 2rem auto;
-    border-radius: 12px;
-    max-width: 900px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+.button-link {
+    background: none!important;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-left: 2rem;
 }
-
-h2 {
-    color: #064420;
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
+.button-link:hover {text-decoration: underline;}
 </style>
 
-<!-- NAVBAR -->
 <div class="nav-bar">
-  <div class="nav-logo">🥬<span>Lettuce Classifier</span></div>
+  <div class="logo">🥬 Lettuce Classifier</div>
   <div class="nav-links">
-    <a href="?page=home">Home</a>
-    <a href="?page=classify">Classify</a>
-    <a href="?page=history">History</a>
-    <a href="?page=about">About</a>
+    <form action="#" method="get">
+      <button class="button-link" name="nav" value="classification">Classification</button>
+      <button class="button-link" name="nav" value="history">History</button>
+      <button class="button-link" name="nav" value="about">About</button>
+    </form>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-# ---------- PAGE ROUTING ----------
-if "page" in st.query_params:
-    st.session_state.page = st.query_params["page"][0]
+# Capture button clicks
+nav = st.query_params.get("nav")
+if nav:
+    st.session_state.page = nav
 
+# ---------- PAGE CONTENT ----------
 page = st.session_state.page
 
-# ---------- HOME ----------
-if page == "home":
-    st.markdown("""
-    <div class="hero">
-      <h1>Lettuce Readiness Classifier</h1>
-      <p>AI-powered detection system using YOLOv11 to classify lettuce readiness for harvest.</p>
-      <a href="?page=classify">Try Classification</a>
-    </div>
-    """, unsafe_allow_html=True)
-
-# ---------- CLASSIFICATION ----------
-elif page == "classify":
-    st.markdown("<div class='section'>", unsafe_allow_html=True)
-    st.markdown("<h2>Upload and Classify</h2>", unsafe_allow_html=True)
-    st.write("Upload a photo of lettuce to determine if it's ready for harvest.")
-
-    uploaded_file = st.file_uploader("Upload Image", type=["jpg","jpeg","png"])
+if page == "classification":
+    st.title("🌿 Lettuce Readiness Classification")
+    st.markdown("<div style='margin-left:5%; margin-right:30%;'>", unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("Upload an image of lettuce", type=["jpg","jpeg","png"])
     if uploaded_file:
         image = Image.open(uploaded_file)
-        col1, col2 = st.columns([1, 1])
+        
+        col1, col2 = st.columns([1,1])
         with col1:
-            st.image(image, caption="Uploaded Image", width=320)
+            st.image(image, caption="Uploaded Image", width=350)
         with col2:
             results = model.predict(image, conf=0.5)
             if len(results) > 0 and len(results[0].boxes) > 0:
@@ -168,17 +122,22 @@ elif page == "classify":
                 cls_id = int(box.cls[0].item())
                 conf = float(box.conf[0].item())
                 label = results[0].names[cls_id]
-                
+
+                st.subheader("Result")
                 st.markdown(f"<p style='color:#064420; font-size:18px; font-weight:600;'>🥬 Classification: {label}</p>", unsafe_allow_html=True)
                 st.progress(conf)
-                st.markdown(f"<p style='color:#064420;'>📊 Confidence: {conf:.2f}</p>", unsafe_allow_html=True)
-                st.markdown(f"<p style='color:#064420;'>📅 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>", unsafe_allow_html=True)
-                st.markdown("""
+                st.markdown(f"<p style='color:#064420; font-size:16px;'>📊 Confidence: {conf:.2f}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='color:#064420; font-size:16px;'>📅 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>", unsafe_allow_html=True)
+                # Custom green info box
+                st.markdown(
+                    """
                     <div style='background-color:#EAF4EA; border-left: 6px solid #064420; padding:10px; border-radius:8px; color:#064420;'>
                         💡 Lettuce typically matures in 30–60 days.
                     </div>
-                """, unsafe_allow_html=True)
-
+                    """,
+                    unsafe_allow_html=True
+                )
+                
                 st.session_state.history.append({
                     "Date/Time": datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                     "Image Name": uploaded_file.name,
@@ -188,11 +147,8 @@ elif page == "classify":
             else:
                 st.warning("No lettuce detected in this image.")
     st.markdown("</div>", unsafe_allow_html=True)
-
-# ---------- HISTORY ----------
 elif page == "history":
-    st.markdown("<div class='section'>", unsafe_allow_html=True)
-    st.markdown("<h2>Classification History</h2>", unsafe_allow_html=True)
+    st.title("📊 Classification History")
     if len(st.session_state.history) > 0:
         df = pd.DataFrame(st.session_state.history)
         st.dataframe(df, use_container_width=True)
@@ -200,23 +156,21 @@ elif page == "history":
         st.download_button("⬇️ Download History as CSV", csv, "lettuce_history.csv", "text/csv")
     else:
         st.info("No classification history yet.")
-    st.markdown("</div>", unsafe_allow_html=True)
 
-# ---------- ABOUT ----------
 elif page == "about":
-    st.markdown("<div class='section'>", unsafe_allow_html=True)
-    st.markdown("<h2>About the System</h2>", unsafe_allow_html=True)
+    st.title("ℹ️ About This System")
     st.markdown("""
-    The Lettuce Readiness Classifier is an AI-based web application powered by **YOLOv11**.  
-    It allows users to upload lettuce images and instantly determine whether they are ready for harvest.
-    
-    **Core Features:**
-    - 🌿 Real-time lettuce readiness classification  
+    ### 🧠 Lettuce Growth Classifier (YOLOv11)
+    A web-based system using **YOLOv11** to determine lettuce readiness.
+
+    **Features**
+    - 🌿 Real-time image classification  
     - 📊 Result history tracking  
-    - 💾 CSV export for research data  
-    - 🧩 Responsive design for mobile and desktop users
+    - 💾 Exportable CSV reports  
+    - 🧩 Easy model updates  
+
+    **Tech stack:** Python · Streamlit · Ultralytics YOLO  
     """)
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------- FOOTER ----------
 st.markdown("""
@@ -224,3 +178,21 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
