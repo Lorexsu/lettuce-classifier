@@ -268,6 +268,11 @@ if page == "home":
     </div>
     """, unsafe_allow_html=True)
 
+    # Button that stays in same tab and switches to classification
+    if st.button("🚀 Start Classification", use_container_width=True):
+        st.session_state.page = "classify"
+        st.rerun()
+
 # ---------- CLASSIFICATION PAGE ----------
 elif page == "classify":
     st.markdown('<div class="section classify-container">', unsafe_allow_html=True)
@@ -387,3 +392,4 @@ st.markdown("""
   <p class="footer-text">© 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu</p>
 </div>
 """, unsafe_allow_html=True)
+
