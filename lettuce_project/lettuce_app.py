@@ -317,7 +317,19 @@ elif page == "classify":
                     "Confidence": f"{conf:.2f}"
                 })
             else:
-                st.warning('<p style="font-size:1.1rem; color:#064420; margin-top:1rem;"> No lettuce detected in this image. Please upload a clearer image.')
+                st.markdown("""
+                    <div style="
+                        background-color:#fef9c3;
+                        border-left:6px solid #facc15;
+                        padding:1rem 1.5rem;
+                        border-radius:8px;
+                        color:#064420;
+                        font-size:1.1rem;
+                        margin-top:1rem;">
+                        No lettuce detected in this image. Please upload a clearer image.
+                    </div>
+                    """, unsafe_allow_html=True)
+
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -393,6 +405,7 @@ st.markdown("""
   <p class="footer-text">© 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu</p>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
