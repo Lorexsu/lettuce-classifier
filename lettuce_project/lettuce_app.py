@@ -242,6 +242,7 @@ if page == "home":
     <div class="hero">
       <h1>🌿 Lettuce Readiness Classifier</h1>
       <p>AI-powered detection system using YOLOv11 to classify lettuce readiness for harvest</p>
+      <a href="?page=classify" class="hero-btn">Start Classification</a> </div>
     </div>
     
     st.markdown('<div style="text-align:center; margin-top:-2rem;">', unsafe_allow_html=True)
@@ -392,6 +393,7 @@ st.markdown("""
   <p class="footer-text">© 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu</p>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
