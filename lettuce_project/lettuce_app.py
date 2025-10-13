@@ -317,7 +317,7 @@ elif page == "classify":
                     "Confidence": f"{conf:.2f}"
                 })
             else:
-                st.warning(" No lettuce detected in this image. Please upload a clearer image.")
+                st.warning(f'<p style="font-size:1.1rem; color:#064420; margin-top:1rem;"> No lettuce detected in this image. Please upload a clearer image.")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -393,6 +393,7 @@ st.markdown("""
   <p class="footer-text">© 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu</p>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
