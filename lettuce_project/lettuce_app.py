@@ -243,13 +243,6 @@ if page == "home":
       <h1>🌿 Lettuce Readiness Classifier</h1>
       <p>AI-powered detection system using YOLOv11 to classify lettuce readiness for harvest</p>
     </div>
-
-         #✅ Button that switches pages in the same tab
-    st.markdown('<div style="text-align:center; margin-top:-2rem;">', unsafe_allow_html=True)
-    if st.button("🚀 Start Classification", use_container_width=False):
-        st.session_state.page = "classify"
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
     
     <div class="section">
       <h2 class="section-title">Key Features</h2>
@@ -273,6 +266,13 @@ if page == "home":
       </div>
     </div>
     """, unsafe_allow_html=True)
+
+#✅ Button that switches pages in the same tab
+    st.markdown('<div style="text-align:center; margin-top:-2rem;">', unsafe_allow_html=True)
+    if st.button("🚀 Start Classification", use_container_width=False):
+        st.session_state.page = "classify"
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- CLASSIFICATION PAGE ----------
 elif page == "classify":
@@ -393,5 +393,6 @@ st.markdown("""
   <p class="footer-text">© 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu</p>
 </div>
 """, unsafe_allow_html=True)
+
 
 
