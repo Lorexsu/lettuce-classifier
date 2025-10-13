@@ -340,7 +340,7 @@ elif page == "history":
             use_container_width=True
         )
     else:
-        st.info("📭 No classification history yet. Start by classifying some lettuce images!")
+        st.info(" No classification history yet. Start by classifying some lettuce images!")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -393,6 +393,7 @@ st.markdown("""
   <p class="footer-text">© 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu</p>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
