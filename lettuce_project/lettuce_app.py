@@ -220,7 +220,7 @@ header, footer {visibility: hidden;}
 </style>
 
 <div class="nav-bar">
-  <div class="nav-logo">🥬 Lettuce Classifier</div>
+  <div class="nav-logo"> Lettuce Classifier</div>
   <div class="nav-links">
     <a href="?page=home">Home</a>
     <a href="?page=classify">Classify</a>
@@ -240,13 +240,13 @@ page = st.session_state.page
 if page == "home":
     st.markdown("""
     <div class="hero">
-      <h1>🌿 Lettuce Readiness Classifier</h1>
+      <h1>Lettuce Readiness Classifier</h1>
       <p>AI-powered detection system using YOLOv11 to classify lettuce readiness for harvest</p>
       <a href="?page=classify" class="hero-btn">Start Classification</a> </div>
     </div>
     
     st.markdown('<div style="text-align:center; margin-top:-2rem;">', unsafe_allow_html=True)
-    if st.button("🚀 Start Classification", use_container_width=False):
+    if st.button(" Start Classification", use_container_width=False):
         st.session_state.page = "classify"
         st.rerun()
     st.markdown('</div>', unsafe_allow_html=True)
@@ -256,17 +256,17 @@ if page == "home":
       <div class="section-divider"></div>
       <div class="feature-grid">
         <div class="feature-card">
-          <div class="feature-icon">🌱</div>
+          <div class="feature-icon"></div>
           <h3 class="feature-title">Real-time Analysis</h3>
           <p class="feature-text">Upload lettuce images and get instant readiness classification powered by YOLOv11</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">📊</div>
+          <div class="feature-icon"></div>
           <h3 class="feature-title">Track History</h3>
           <p class="feature-text">Monitor all classifications with detailed confidence scores and timestamps</p>
         </div>
         <div class="feature-card">
-          <div class="feature-icon">💾</div>
+          <div class="feature-icon"></div>
           <h3 class="feature-title">Export Data</h3>
           <p class="feature-text">Download your classification history as CSV for analysis and record-keeping</p>
         </div>
@@ -298,15 +298,15 @@ elif page == "classify":
                 label = results[0].names[cls_id]
                 
                 st.markdown('<div class="result-box">', unsafe_allow_html=True)
-                st.markdown(f'<div class="result-label">🥬 Classification: {label}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="result-label">Classification: {label}</div>', unsafe_allow_html=True)
                 st.progress(conf)
-                st.markdown(f'<p style="font-size:1.1rem; color:#064420; margin-top:1rem;">📊 Confidence: <strong>{conf:.2%}</strong></p>', unsafe_allow_html=True)
-                st.markdown(f'<p style="font-size:1rem; color:#64748b;">📅 {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>', unsafe_allow_html=True)
+                st.markdown(f'<p style="font-size:1.1rem; color:#064420; margin-top:1rem;"> Confidence: <strong>{conf:.2%}</strong></p>', unsafe_allow_html=True)
+                st.markdown(f'<p style="font-size:1rem; color:#64748b;"> {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}</p>', unsafe_allow_html=True)
                 st.markdown('</div>', unsafe_allow_html=True)
                 
                 st.markdown("""
                     <div class="info-badge">
-                        💡 Lettuce typically matures in 30–60 days from transplant
+                         Lettuce typically matures in 30–60 days from transplant
                     </div>
                 """, unsafe_allow_html=True)
                 
@@ -317,14 +317,14 @@ elif page == "classify":
                     "Confidence": f"{conf:.2f}"
                 })
             else:
-                st.warning("⚠️ No lettuce detected in this image. Please upload a clearer image.")
+                st.warning(" No lettuce detected in this image. Please upload a clearer image.")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- HISTORY PAGE ----------
 elif page == "history":
     st.markdown('<div class="section">', unsafe_allow_html=True)
-    st.markdown('<h2 class="section-title">📊 Classification History</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-title"> Classification History</h2>', unsafe_allow_html=True)
     st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
     
     if len(st.session_state.history) > 0:
@@ -333,7 +333,7 @@ elif page == "history":
         
         csv = df.to_csv(index=False).encode("utf-8")
         st.download_button(
-            "⬇️ Download History as CSV",
+            " Download History as CSV",
             csv,
             "lettuce_history.csv",
             "text/csv",
@@ -353,13 +353,13 @@ elif page == "about":
     st.markdown("""
     <div style="font-size: 1.1rem; line-height: 1.8; color: #475569;">
     
-    ### 🧠 AI-Powered Lettuce Classification
+    ###  AI-Powered Lettuce Classification
     
     This application uses **YOLOv11** (You Only Look Once), a state-of-the-art deep learning model for 
     real-time object detection and classification. Our system has been specifically trained to identify 
     lettuce readiness stages with high accuracy.
     
-    ### ✨ Key Capabilities
+    ###  Key Capabilities
     
     - **Real-time Detection**: Upload images and receive instant classification results
     - **High Accuracy**: Trained on thousands of lettuce images for reliable predictions
@@ -367,14 +367,14 @@ elif page == "about":
     - **History Tracking**: Automatically logs all classifications with timestamps
     - **Data Export**: Download your classification history for further analysis
     
-    ### 🛠️ Technology Stack
+    ###  Technology Stack
     
     - **Framework**: Streamlit for interactive web interface
     - **AI Model**: YOLOv11 via Ultralytics
     - **Image Processing**: PIL (Python Imaging Library)
     - **Data Management**: Pandas for history tracking
     
-    ### 📈 Use Cases
+    ###  Use Cases
     
     This tool is perfect for farmers, agricultural researchers, and commercial growers who need to:
     - Monitor crop readiness efficiently
@@ -393,6 +393,7 @@ st.markdown("""
   <p class="footer-text">© 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu</p>
 </div>
 """, unsafe_allow_html=True)
+
 
 
 
