@@ -34,11 +34,6 @@ body {
 header, footer {visibility: hidden;}
 .main {padding: 0 !important;}
 
-/* HIDE DEFAULT BUTTONS */
-.stButton button {
-    display: none;
-}
-
 /* NAVBAR */
 .nav-bar {
     background-color: white;
@@ -227,28 +222,17 @@ header, footer {visibility: hidden;}
 <div class="nav-bar">
   <div class="nav-logo">🥬 Lettuce Classifier</div>
   <div class="nav-links">
-    <a href="#" onclick="document.querySelector('[data-testid=\\'stButton\\'][key=\\'nav_home\\'] button').click(); return false;">Home</a>
-    <a href="#" onclick="document.querySelector('[data-testid=\\'stButton\\'][key=\\'nav_classify\\'] button').click(); return false;">Classify</a>
-    <a href="#" onclick="document.querySelector('[data-testid=\\'stButton\\'][key=\\'nav_history\\'] button').click(); return false;">History</a>
-    <a href="#" onclick="document.querySelector('[data-testid=\\'stButton\\'][key=\\'nav_about\\'] button').click(); return false;">About</a>
+    <a href="?page=home">Home</a>
+    <a href="?page=classify">Classify</a>
+    <a href="?page=history">History</a>
+    <a href="?page=about">About</a>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
-# Navigation buttons (hidden but functional)
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    if st.button("🏠 Home", key="nav_home", use_container_width=True):
-        st.session_state.page = "home"
-with col2:
-    if st.button("🌿 Classify", key="nav_classify", use_container_width=True):
-        st.session_state.page = "classify"
-with col3:
-    if st.button("📊 History", key="nav_history", use_container_width=True):
-        st.session_state.page = "history"
-with col4:
-    if st.button("ℹ️ About", key="nav_about", use_container_width=True):
-        st.session_state.page = "about"
+# Capture navigation
+if "page" in st.query_params:
+    st.session_state.page = st.query_params["page"]
 
 page = st.session_state.page
 
