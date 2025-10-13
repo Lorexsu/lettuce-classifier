@@ -33,7 +33,7 @@ header, footer {visibility: hidden;}
 
 .nav-bar {
     background-color: #064420;
-    color: #iwhite;
+    color: white;
     padding: 1rem 2rem;
     font-size: 1.2rem;
     display: flex;
@@ -58,9 +58,7 @@ header, footer {visibility: hidden;}
 }
 
 h1,h2,h3{
-
 color:#064420;
-
 }
 .footer {
     background-color: #064420;
@@ -107,14 +105,13 @@ page = st.session_state.page
 
 if page == "classification":
     st.title("🌿 Lettuce Readiness Classification")
-    st.markdown("<div style='margin-left:5%; margin-right:30%;'>", unsafe_allow_html=True)
     uploaded_file = st.file_uploader("Upload an image of lettuce", type=["jpg","jpeg","png"])
     if uploaded_file:
         image = Image.open(uploaded_file)
         
-        col1, col2 = st.columns([1,1])
+        col1, col2 = st.columns([1.3, 1.7])
         with col1:
-            st.image(image, caption="Uploaded Image", width=350)
+            st.image(image, caption="Uploaded Image", use_column_width=True)
         with col2:
             results = model.predict(image, conf=0.5)
             if len(results) > 0 and len(results[0].boxes) > 0:
@@ -124,14 +121,14 @@ if page == "classification":
                 label = results[0].names[cls_id]
 
                 st.subheader("Result")
-                st.markdown(f"<p style='color:#064420; font-size:18px; font-weight:600;'>🥬 Classification: {label}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='color:#064420; font-size:22px; font-weight:600;'>🥬 Classification: {label}</p>", unsafe_allow_html=True)
                 st.progress(conf)
-                st.markdown(f"<p style='color:#064420; font-size:16px;'>📊 Confidence: {conf:.2f}</p>", unsafe_allow_html=True)
-                st.markdown(f"<p style='color:#064420; font-size:16px;'>📅 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='color:#064420; font-size:20px;'>📊 Confidence: {conf:.2f}</p>", unsafe_allow_html=True)
+                st.markdown(f"<p style='color:#064420; font-size:20px;'>📅 {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>", unsafe_allow_html=True)
                 # Custom green info box
                 st.markdown(
                     """
-                    <div style='background-color:#EAF4EA; border-left: 6px solid #064420; padding:10px; border-radius:8px; color:#064420;'>
+                    <div style='background-color:#EAF4EA; border-left: 6px solid #064420; padding:15px; border-radius:8px; color:#064420; font-size:18px;'>
                         💡 Lettuce typically matures in 30–60 days.
                     </div>
                     """,
@@ -146,7 +143,7 @@ if page == "classification":
                 })
             else:
                 st.warning("No lettuce detected in this image.")
-    st.markdown("</div>", unsafe_allow_html=True)
+
 elif page == "history":
     st.title("📊 Classification History")
     if len(st.session_state.history) > 0:
@@ -178,21 +175,3 @@ st.markdown("""
   © 2025 Lettuce Classifier | Powered by YOLOv11 | Designed by Lorexsu
 </div>
 """, unsafe_allow_html=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
