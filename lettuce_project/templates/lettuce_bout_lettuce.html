@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lettuce Varieties</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5016 0%, #1a3d0a 50%, #0a2805 100%);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, rgba(76, 175, 80, 0.3) 0%, rgba(46, 125, 50, 0.3) 100%);
+            backdrop-filter: blur(10px);
+            padding: 40px 0;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-item {
+            padding: 20px 30px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #8bc34a;
+        }
+
+        .menu-item.active {
+            background: rgba(139, 195, 74, 0.2);
+            border-left-color: #8bc34a;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px 60px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter></defs><rect width="1200" height="800" filter="url(%23noise)" opacity="0.03"/></svg>');
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            color: #c5e1a5;
+            font-size: 42px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .varieties-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .variety-card {
+            background: linear-gradient(135deg, rgba(139, 195, 74, 0.15) 0%, rgba(104, 159, 56, 0.15) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(139, 195, 74, 0.2);
+            cursor: pointer;
+        }
+
+        .variety-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 48px rgba(139, 195, 74, 0.3);
+            background: linear-gradient(135deg, rgba(139, 195, 74, 0.25) 0%, rgba(104, 159, 56, 0.25) 100%);
+        }
+
+        .image-container {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #d4e7c5 0%, #a5c98a 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .lettuce-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .variety-name {
+            text-align: center;
+            color: #c5e1a5;
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+        }
+
+        .variety-dots {
+            text-align: center;
+            color: rgba(197, 225, 165, 0.5);
+            font-size: 28px;
+            letter-spacing: 8px;
+        }
+
+        /* Decorative elements */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(139, 195, 74, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(104, 159, 56, 0.3) 0%, transparent 50%);
+        }
+
+        @media (max-width: 1024px) {
+            .varieties-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                width: 200px;
+            }
+            
+            .main-content {
+                padding: 30px 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 150px;
+                padding: 20px 0;
+            }
+            
+            .menu-item {
+                padding: 15px 20px;
+                font-size: 14px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .variety-name {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="sidebar">
+        <div class="menu-item">DASHBOARD</div>
+        <div class="menu-item">IOT DEVICES</div>
+        <div class="menu-item">TEST READINESS</div>
+        <div class="menu-item active">ABOUT LETTUCE</div>
+        <div class="menu-item">RESEARCHERSS BACKGROUND</div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>LETTUCE BACKGROUND – VARIETIES</h1>
+        </div>
+
+        <div class="varieties-container">
+            <div class="variety-card">
+                <div class="image-container">
+                    <svg class="lettuce-image" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="lettuceGrad1">
+                                <stop offset="0%" style="stop-color:#d4ed8d;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#9bc435;stop-opacity:1" />
+                            </radialGradient>
+                        </defs>
+                        <g transform="translate(100, 120)">
+                            <path d="M 0,-60 Q -20,-50 -25,-30 Q -30,-10 -20,10 L 0,15 Z" fill="url(#lettuceGrad1)" opacity="0.9"/>
+                            <path d="M 0,-60 Q 20,-50 25,-30 Q 30,-10 20,10 L 0,15 Z" fill="url(#lettuceGrad1)" opacity="0.85"/>
+                            <path d="M -15,-55 Q -25,-40 -30,-20 Q -25,0 -10,15 L 0,20 Z" fill="url(#lettuceGrad1)" opacity="0.8"/>
+                            <path d="M 15,-55 Q 25,-40 30,-20 Q 25,0 10,15 L 0,20 Z" fill="url(#lettuceGrad1)" opacity="0.75"/>
+                            <path d="M -20,-45 Q -30,-30 -28,-10 Q -20,5 0,20 Z" fill="#c5e05f" opacity="0.9"/>
+                            <path d="M 20,-45 Q 30,-30 28,-10 Q 20,5 0,20 Z" fill="#c5e05f" opacity="0.85"/>
+                            <ellipse cx="0" cy="25" rx="15" ry="25" fill="#9bc435"/>
+                        </g>
+                    </svg>
+                </div>
+                <h2 class="variety-name">ESTROSA</h2>
+                <div class="variety-dots">• • •</div>
+            </div>
+
+            <div class="variety-card">
+                <div class="image-container">
+                    <svg class="lettuce-image" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="lettuceGrad2">
+                                <stop offset="0%" style="stop-color:#d4ed8d;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#9bc435;stop-opacity:1" />
+                            </radialGradient>
+                        </defs>
+                        <circle cx="100" cy="100" r="60" fill="url(#lettuceGrad2)"/>
+                        <circle cx="100" cy="100" r="50" fill="#c5e05f" opacity="0.8"/>
+                        <circle cx="100" cy="100" r="40" fill="#9bc435" opacity="0.6"/>
+                        <circle cx="90" cy="90" r="8" fill="#7fa82e" opacity="0.7"/>
+                        <circle cx="110" cy="95" r="6" fill="#7fa82e" opacity="0.7"/>
+                        <circle cx="100" cy="110" r="7" fill="#7fa82e" opacity="0.7"/>
+                        <circle cx="85" cy="105" r="5" fill="#7fa82e" opacity="0.7"/>
+                        <circle cx="115" cy="108" r="6" fill="#7fa82e" opacity="0.7"/>
+                    </svg>
+                </div>
+                <h2 class="variety-name">OLMETIE</h2>
+                <div class="variety-dots">• • •</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add click handlers for variety cards
+        document.querySelectorAll('.variety-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const varietyName = this.querySelector('.variety-name').textContent;
+                console.log('Selected variety:', varietyName);
+            });
+        });
+
+        // Add click handlers for menu items
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

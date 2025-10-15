@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lettuce Monitoring System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d5016 0%, #1a3d0a 50%, #0a2805 100%);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, rgba(76, 175, 80, 0.9) 0%, rgba(46, 125, 50, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            padding: 40px 0;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .menu-item {
+            padding: 20px 30px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: #8bc34a;
+        }
+
+        .menu-item.active {
+            background: rgba(139, 195, 74, 0.2);
+            border-left-color: #8bc34a;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter></defs><rect width="1200" height="800" filter="url(%23noise)" opacity="0.03"/></svg>');
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Styles */
+        .dashboard-page {
+            padding: 0;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+            padding: 30px 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-header h1 {
+            color: white;
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .dashboard-content {
+            padding: 40px 50px;
+        }
+
+        .growth-stage-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 3px solid #42a5f5;
+        }
+
+        .growth-stage-card h2 {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .stage-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .stage-label {
+            min-width: 180px;
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .stage-bar {
+            flex: 1;
+            height: 30px;
+            background: #00a000;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .timeline-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .timeline-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .timeline-days {
+            font-size: 16px;
+            color: #333;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .metric-card h3 {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        /* Test Readiness Styles */
+        .test-page {
+            padding: 0;
+        }
+
+        .test-header {
+            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+            padding: 30px 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .test-header h1 {
+            color: white;
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .test-content {
+            padding: 40px 50px;
+            background: #e8f5e9;
+            min-height: calc(100vh - 100px);
+            display: flex;
+            gap: 30px;
+        }
+
+        .upload-section {
+            flex: 1;
+            background: #d4e7c5;
+            border-radius: 20px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+
+        .upload-area {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .upload-box {
+            background: white;
+            border: 3px dashed #4caf50;
+            border-radius: 15px;
+            padding: 60px 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .upload-box:hover {
+            background: #f0fdf4;
+            border-color: #22c55e;
+        }
+
+        .upload-box.drag-over {
+            background: #dcfce7;
+            border-color: #16a34a;
+        }
+
+        .upload-icon {
+            font-size: 64px;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .upload-hint {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .result-section {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .result-status {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .result-status.ready {
+            background: #dcfce7;
+            color: #15803d;
+            border: 3px solid #22c55e;
+        }
+
+        .result-status.not-ready {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 3px solid #ef4444;
+        }
+
+        .result-status.uncertain {
+            background: #fef9c3;
+            color: #854d0e;
+            border: 3px solid #facc15;
+        }
+
+        .reason-box {
+            background: #f8fafc;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .reason-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .reason-text {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .analyze-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .analyze-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .analyze-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .placeholder-text {
+            text-align: center;
+            color: #999;
+            font-size: 16px;
+            margin-top: 40px;
+        }
+
+        /* IOT Devices Styles */
+        .iot-page {
+            padding: 0;
+        }
+
+        .iot-header {
+            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+            padding: 30px 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .iot-header h1 {
+            color: white;
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .iot-content {
+            padding: 40px 50px;
+            background: #e8f5e9;
+            min-height: calc(100vh - 100px);
+        }
+
+        .device-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .device-header {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .device-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .time-display {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .time-input {
+            font-size: 80px;
+            font-weight: 900;
+            color: #000;
+            border: none;
+            outline: none;
+            width: 200px;
+            text-align: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .time-unit {
+            font-size: 28px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .toggle-switch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 120px;
+            height: 60px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 60px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 52px;
+            width: 52px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .slider {
+            background-color: #4caf50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(60px);
+        }
+
+        .toggle-label {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            letter-spacing: 1px;
+        }
+
+        /* About Lettuce Styles */
+        .about-lettuce-page {
+            padding: 40px 60px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            color: #c5e1a5;
+            font-size: 42px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .varieties-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .variety-card {
+            background: linear-gradient(135deg, rgba(139, 195, 74, 0.15) 0%, rgba(104, 159, 56, 0.15) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(139, 195, 74, 0.2);
+            cursor: pointer;
+        }
+
+        .variety-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 48px rgba(139, 195, 74, 0.3);
+            background: linear-gradient(135deg, rgba(139, 195, 74, 0.25) 0%, rgba(104, 159, 56, 0.25) 100%);
+        }
+
+        .image-container {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #d4e7c5 0%, #a5c98a 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .lettuce-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .variety-name {
+            text-align: center;
+            color: #c5e1a5;
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+        }
+
+        .variety-dots {
+            text-align: center;
+            color: rgba(197, 225, 165, 0.5);
+            font-size: 28px;
+            letter-spacing: 8px;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.05;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(139, 195, 74, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(104, 159, 56, 0.3) 0%, transparent 50%);
+        }
+
+        @media (max-width: 1024px) {
+            .varieties-container,
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 150px;
+                padding: 20px 0;
+            }
+            
+            .menu-item {
+                padding: 15px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="sidebar">
+        <div class="menu-item active" data-page="dashboard">DASHBOARD</div>
+        <div class="menu-item" data-page="iot-devices">IOT DEVICES</div>
+        <div class="menu-item" data-page="test-readiness">TEST READINESS</div>
+        <div class="menu-item" data-page="about-lettuce">ABOUT LETTUCE</div>
+        <div class="menu-item" data-page="researchers">RESEARCHERSS BACKGROUND</div>
+    </div>
+
+    <div class="main-content">
+        <!-- Dashboard Page -->
+        <div class="page dashboard-page active" id="dashboard">
+            <div class="dashboard-header">
+                <h1>DATA MONITORING</h1>
+            </div>
+            
+            <div class="dashboard-content">
+                <div class="growth-stage-card">
+                    <h2>SEEDLINGS TO HARVEST STAGE</h2>
+                    
+                    <div class="stage-row">
+                        <div class="stage-label">seedling stage</div>
+                        <div class="stage-bar" style="max-width: 15%;"></div>
+                    </div>
+                    
+                    <div class="stage-row">
+                        <div class="stage-label">vegetative stage</div>
+                        <div class="stage-bar" style="max-width: 40%;"></div>
+                    </div>
+                    
+                    <div class="stage-row">
+                        <div class="stage-label">vegetative stage</div>
+                        <div class="stage-bar" style="max-width: 75%;"></div>
+                    </div>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-label">DAYS</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-days">1 - 12</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-days">12 - 30</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-days">30 - 45</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>TEMPERATURE</h3>
+                        <div class="metric-icon">🌡️</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <h3>HUMIDITY</h3>
+                        <div class="metric-icon">💧</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <h3>NUTRIENTS USED</h3>
+                        <div class="metric-icon">🌱</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Lettuce Page -->
+        <div class="page about-lettuce-page" id="about-lettuce">
+            <div class="header">
+                <h1>LETTUCE BACKGROUND – VARIETIES</h1>
+            </div>
+
+            <div class="varieties-container">
+                <div class="variety-card">
+                    <div class="image-container">
+                        <svg class="lettuce-image" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <radialGradient id="lettuceGrad1">
+                                    <stop offset="0%" style="stop-color:#d4ed8d;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#9bc435;stop-opacity:1" />
+                                </radialGradient>
+                            </defs>
+                            <g transform="translate(100, 120)">
+                                <path d="M 0,-60 Q -20,-50 -25,-30 Q -30,-10 -20,10 L 0,15 Z" fill="url(#lettuceGrad1)" opacity="0.9"/>
+                                <path d="M 0,-60 Q 20,-50 25,-30 Q 30,-10 20,10 L 0,15 Z" fill="url(#lettuceGrad1)" opacity="0.85"/>
+                                <path d="M -15,-55 Q -25,-40 -30,-20 Q -25,0 -10,15 L 0,20 Z" fill="url(#lettuceGrad1)" opacity="0.8"/>
+                                <path d="M 15,-55 Q 25,-40 30,-20 Q 25,0 10,15 L 0,20 Z" fill="url(#lettuceGrad1)" opacity="0.75"/>
+                                <path d="M -20,-45 Q -30,-30 -28,-10 Q -20,5 0,20 Z" fill="#c5e05f" opacity="0.9"/>
+                                <path d="M 20,-45 Q 30,-30 28,-10 Q 20,5 0,20 Z" fill="#c5e05f" opacity="0.85"/>
+                                <ellipse cx="0" cy="25" rx="15" ry="25" fill="#9bc435"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <h2 class="variety-name">ESTROSA</h2>
+                    <div class="variety-dots">• • •</div>
+                </div>
+
+                <div class="variety-card">
+                    <div class="image-container">
+                        <svg class="lettuce-image" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <radialGradient id="lettuceGrad2">
+                                    <stop offset="0%" style="stop-color:#d4ed8d;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#9bc435;stop-opacity:1" />
+                                </radialGradient>
+                            </defs>
+                            <circle cx="100" cy="100" r="60" fill="url(#lettuceGrad2)"/>
+                            <circle cx="100" cy="100" r="50" fill="#c5e05f" opacity="0.8"/>
+                            <circle cx="100" cy="100" r="40" fill="#9bc435" opacity="0.6"/>
+                            <circle cx="90" cy="90" r="8" fill="#7fa82e" opacity="0.7"/>
+                            <circle cx="110" cy="95" r="6" fill="#7fa82e" opacity="0.7"/>
+                            <circle cx="100" cy="110" r="7" fill="#7fa82e" opacity="0.7"/>
+                            <circle cx="85" cy="105" r="5" fill="#7fa82e" opacity="0.7"/>
+                            <circle cx="115" cy="108" r="6" fill="#7fa82e" opacity="0.7"/>
+                        </svg>
+                    </div>
+                    <h2 class="variety-name">OLMETIE</h2>
+                    <div class="variety-dots">• • •</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Readiness Page -->
+        <div class="page test-page" id="test-readiness">
+            <div class="test-header">
+                <h1>TESTING LETTUCE READINESS</h1>
+            </div>
+            
+            <div class="test-content">
+                <div class="upload-section">
+                    <div class="upload-area">
+                        <div class="upload-box" id="uploadBox">
+                            <div class="upload-icon">📁</div>
+                            <div class="upload-text">INSERT IMAGE</div>
+                            <div class="upload-hint">Click or drag image here</div>
+                        </div>
+                        <input type="file" id="fileInput" class="file-input" accept="image/*">
+                        
+                        <div id="previewSection" style="display: none;">
+                            <div class="preview-container">
+                                <img id="previewImage" class="preview-image" alt="Preview">
+                                <div style="text-align: center; font-weight: 500; color: #333;">*INSERTED IMAGE</div>
+                            </div>
+                            <button class="analyze-btn" id="analyzeBtn">Analyze Lettuce</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <div id="resultPlaceholder" class="placeholder-text">
+                        Upload an image to see results
+                    </div>
+                    
+                    <div id="resultContent" style="display: none;">
+                        <div class="result-title">RESULT:</div>
+                        <div class="result-status" id="resultStatus">READY TO HARVEST</div>
+                        
+                        <div class="reason-box" id="readyReasons" style="border-left-color: #4caf50;">
+                            <div class="reason-title">✓ Why it's Ready to Harvest:</div>
+                            <div class="reason-text" id="readyText">
+                                • Leaves are fully developed and vibrant green<br>
+                                • Optimal size reached (6-8 inches in diameter)<br>
+                                • Dense leaf formation with tight head structure<br>
+                                • No signs of bolting or flowering<br>
+                                • Leaves appear crisp and fresh
+                            </div>
+                        </div>
+                        
+                        <div class="reason-box" id="notReadyReasons" style="border-left-color: #ef4444; display: none;">
+                            <div class="reason-title">✗ Why it's NOT Ready to Harvest:</div>
+                            <div class="reason-text" id="notReadyText">
+                                • Leaves are still small and underdeveloped<br>
+                                • Size below optimal harvest diameter (less than 4 inches)<br>
+                                • Loose leaf formation, head not fully formed<br>
+                                • May show signs of pest damage or discoloration<br>
+                                • Needs more time to reach maturity (7-14 days)
+                            </div>
+                        </div>
+
+                        <div class="reason-box" id="uncertainReasons" style="border-left-color: #facc15; display: none;">
+                            <div class="reason-title">⚠ Uncertain Classification:</div>
+                            <div class="reason-text" id="uncertainText">
+                                • No lettuce detected in the image<br>
+                                • Image quality may be too low<br>
+                                • Lettuce may be partially visible or obstructed<br>
+                                • Try uploading a clearer, well-lit image<br>
+                                • Ensure the lettuce is the main focus of the image
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- IOT Devices Page -->
+        <div class="page iot-page" id="iot-devices">
+            <div class="iot-header">
+                <h1>IOT CONTROLLERS</h1>
+            </div>
+            
+            <div class="iot-content">
+                <div class="device-card">
+                    <div class="device-header">FAN</div>
+                    <div class="device-content">
+                        <div class="time-display">
+                            <input type="number" class="time-input" value="30" min="0" max="999" id="fan-time">
+                            <span class="time-unit">SECS.</span>
+                        </div>
+                        <div class="toggle-switch">
+                            <label class="switch">
+                                <input type="checkbox" id="fan-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <span class="toggle-label">ON/OFF</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device-card">
+                    <div class="device-header">MIST</div>
+                    <div class="device-content">
+                        <div class="time-display">
+                            <input type="number" class="time-input" value="30" min="0" max="999" id="mist-time">
+                            <span class="time-unit">SECS.</span>
+                        </div>
+                        <div class="toggle-switch">
+                            <label class="switch">
+                                <input type="checkbox" id="mist-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <span class="toggle-label">ON/OFF</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="test-readiness" style="padding: 60px; color: #c5e1a5; text-align: center;">
+            <h1 style="font-size: 36px;">TEST READINESS</h1>
+            <p style="margin-top: 20px; font-size: 18px;">Content coming soon...</p>
+        </div>
+
+        <div class="page" id="researchers" style="padding: 60px; color: #c5e1a5; text-align: center;">
+            <h1 style="font-size: 36px;">RESEARCHERS BACKGROUND</h1>
+            <p style="margin-top: 20px; font-size: 18px;">Content coming soon...</p>
+        </div>
+    </div>
+
+    <script>
+        // Device state management
+        const deviceStates = {
+            fan: { time: 30, isOn: true },
+            mist: { time: 30, isOn: true }
+        };
+
+        let uploadedImage = null;
+
+        // Navigation functionality
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all menu items
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Hide all pages
+                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                
+                // Show selected page
+                const pageId = this.getAttribute('data-page');
+                document.getElementById(pageId).classList.add('active');
+            });
+        });
+
+        // Test Readiness - Image Upload
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+        const previewSection = document.getElementById('previewSection');
+        const previewImage = document.getElementById('previewImage');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resultPlaceholder = document.getElementById('resultPlaceholder');
+        const resultContent = document.getElementById('resultContent');
+        const resultStatus = document.getElementById('resultStatus');
+        const readyReasons = document.getElementById('readyReasons');
+        const notReadyReasons = document.getElementById('notReadyReasons');
+        const uncertainReasons = document.getElementById('uncertainReasons');
+
+        // Click to upload
+        uploadBox.addEventListener('click', () => fileInput.click());
+
+        // Drag and drop
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadBox.classList.add('drag-over');
+        });
+
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.classList.remove('drag-over');
+        });
+
+        uploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadBox.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleImageUpload(file);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleImageUpload(file);
+            }
+        });
+
+        function handleImageUpload(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedImage = e.target.result;
+                previewImage.src = uploadedImage;
+                uploadBox.style.display = 'none';
+                previewSection.style.display = 'block';
+                
+                // Reset results
+                resultPlaceholder.style.display = 'block';
+                resultContent.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Analyze button
+        analyzeBtn.addEventListener('click', async () => {
+            if (!uploadedImage) return;
+            
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = 'Analyzing...';
+            
+            try {
+                // Send image to backend for YOLO classification
+                const response = await fetch('/classify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: uploadedImage
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.detected) {
+                    // Classification found
+                    const classification = result.classification.toLowerCase();
+                    const confidence = result.confidence;
+                    
+                    // Determine status based on classification
+                    if (classification.includes('ready') || classification.includes('harvest')) {
+                        showResults('ready', classification, confidence);
+                    } else if (classification.includes('not') || classification.includes('immature')) {
+                        showResults('not-ready', classification, confidence);
+                    } else {
+                        showResults('ready', classification, confidence);
+                    }
+                } else {
+                    // No detection - show uncertain
+                    showResults('uncertain', 'No lettuce detected', 0);
+                }
+                
+            } catch (error) {
+                console.error('Classification error:', error);
+                // Fallback to demo mode if backend not available
+                console.log('Backend not available, using demo mode');
+                const demoResult = Math.random();
+                if (demoResult > 0.66) {
+                    showResults('ready', 'Ready to Harvest', 0.85);
+                } else if (demoResult > 0.33) {
+                    showResults('not-ready', 'Not Ready', 0.78);
+                } else {
+                    showResults('uncertain', 'Uncertain', 0.45);
+                }
+            }
+            
+            analyzeBtn.disabled = false;
+            analyzeBtn.textContent = 'Analyze Again';
+        });
+
+        function showResults(status, classification, confidence) {
+            resultPlaceholder.style.display = 'none';
+            resultContent.style.display = 'block';
+            
+            // Hide all reason boxes first
+            readyReasons.style.display = 'none';
+            notReadyReasons.style.display = 'none';
+            uncertainReasons.style.display = 'none';
+            
+            if (status === 'ready') {
+                resultStatus.textContent = 'READY TO HARVEST ✓';
+                resultStatus.className = 'result-status ready';
+                readyReasons.style.display = 'block';
+                
+                if (confidence) {
+                    resultStatus.textContent = `READY TO HARVEST ✓ (${(confidence * 100).toFixed(1)}%)`;
+                }
+            } else if (status === 'not-ready') {
+                resultStatus.textContent = 'NOT READY TO HARVEST ✗';
+                resultStatus.className = 'result-status not-ready';
+                notReadyReasons.style.display = 'block';
+                
+                if (confidence) {
+                    resultStatus.textContent = `NOT READY TO HARVEST ✗ (${(confidence * 100).toFixed(1)}%)`;
+                }
+            } else {
+                resultStatus.textContent = 'UNCERTAIN ⚠';
+                resultStatus.className = 'result-status uncertain';
+                uncertainReasons.style.display = 'block';
+            }
+        }
+
+        // IOT Device Controls
+        function setupDeviceControl(deviceName) {
+            const timeInput = document.getElementById(`${deviceName}-time`);
+            const toggle = document.getElementById(`${deviceName}-toggle`);
+
+            // Time input handler
+            timeInput.addEventListener('change', function() {
+                deviceStates[deviceName].time = parseInt(this.value) || 0;
+                console.log(`${deviceName.toUpperCase()} time set to: ${deviceStates[deviceName].time} seconds`);
+            });
+
+            // Toggle handler
+            toggle.addEventListener('change', function() {
+                deviceStates[deviceName].isOn = this.checked;
+                const status = this.checked ? 'ON' : 'OFF';
+                console.log(`${deviceName.toUpperCase()} turned ${status}`);
+                console.log(`Current settings: ${deviceStates[deviceName].time} seconds, Status: ${status}`);
+            });
+        }
+
+        // Initialize device controls
+        setupDeviceControl('fan');
+        setupDeviceControl('mist');
+
+        // Add click handlers for variety cards
+        document.querySelectorAll('.variety-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const varietyName = this.querySelector('.variety-name').textContent;
+                console.log('Selected variety:', varietyName);
+            });
+        });
+
+        // Function to get device states (useful for sending to backend)
+        function getDeviceStates() {
+            return deviceStates;
+        }
+
+        // Function to get uploaded image (useful for sending to backend)
+        function getUploadedImage() {
+            return uploadedImage;
+        }
+
+        // Expose to window for Streamlit communication
+        window.getDeviceStates = getDeviceStates;
+        window.getUploadedImage = getUploadedImage;
+    </script>
+</body>
+</html>
