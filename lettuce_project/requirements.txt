@@ -1,5 +1,6 @@
-ultralytics==8.3.20
-streamlit==1.38.0
+fastapi
+uvicorn
+ultralytics
 pillow
-numpy
-opencv-python-headless
+pydantic
+python-multipart
