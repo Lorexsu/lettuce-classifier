@@ -1,6 +1,1 @@
-fastapi
-uvicorn
-ultralytics
-pillow
-pydantic
-python-multipart
+
