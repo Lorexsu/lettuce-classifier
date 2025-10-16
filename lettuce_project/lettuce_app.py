@@ -1,23 +1,40 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from ultralytics import YOLO
 from PIL import Image
 import io
 import base64
 import os
+import subprocess
+import sys
 
 app = Flask(__name__)
 CORS(app)
 
-# Load model - handle different paths for local vs deployed
-model_path = os.getenv("MODEL_PATH", "lettuce_project/runs/detect/lettuce_new_new/weights/best.pt")
-
+# Try to import YOLO, install if needed
 try:
-    model = YOLO(model_path)
-except Exception as e:
-    print(f"Error loading model from {model_path}: {e}")
-    print("Using default YOLOv8 model as fallback")
-    model = YOLO("yolov8n.pt")
+    from ultralytics import YOLO
+    model_loaded = True
+except ImportError:
+    print("Installing ultralytics...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "ultralytics"])
+    from ultralytics import YOLO
+    model_loaded = True
+
+# Load model
+model = None
+if model_loaded:
+    model_path = os.getenv("MODEL_PATH", "lettuce_project/best.pt")
+    try:
+        model = YOLO(model_path)
+        print(f"Model loaded from {model_path}")
+    except Exception as e:
+        print(f"Error loading model from {model_path}: {e}")
+        try:
+            print("Using default YOLOv8 model as fallback")
+            model = YOLO("yolov8n.pt")
+        except Exception as e2:
+            print(f"Failed to load any model: {e2}")
+            model = None
 
 @app.route('/classify', methods=['POST'])
 def classify():
