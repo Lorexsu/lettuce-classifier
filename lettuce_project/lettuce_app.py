@@ -1,53 +1,32 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from ultralytics import YOLO
 from PIL import Image
 import io
 import base64
+import os
 
-app = FastAPI()
+app = Flask(__name__)
+CORS(app)
 
-# Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific origins
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Load model - handle different paths for local vs deployed
+model_path = os.getenv("MODEL_PATH", "lettuce_project/runs/detect/lettuce_new_new/weights/best.pt")
 
-# Load YOLO model - adjust path based on your deployment
 try:
-    # For local development
-    model = YOLO("lettuce_project/best.pt")
-except:
-    # Fallback - download default model if custom model not found
-    print("Custom model not found, using default YOLOv8 model")
+    model = YOLO(model_path)
+except Exception as e:
+    print(f"Error loading model from {model_path}: {e}")
+    print("Using default YOLOv8 model as fallback")
     model = YOLO("yolov8n.pt")
 
-# Request model
-class ImageRequest(BaseModel):
-    image: str
-
-# Response model
-class ClassificationResponse(BaseModel):
-    detected: bool
-    classification: str = None
-    confidence: float = None
-    error: str = None
-
-@app.post("/classify", response_model=ClassificationResponse)
-async def classify(request: ImageRequest):
+@app.route('/classify', methods=['POST'])
+def classify():
     try:
-        # Remove data:image/png;base64, prefix
-        image_data = request.image.split(',')[1] if ',' in request.image else request.image
-        
-        # Decode base64 image
+        data = request.json
+        image_data = data['image'].split(',')[1] if ',' in data['image'] else data['image']
         image_bytes = base64.b64decode(image_data)
         image = Image.open(io.BytesIO(image_bytes))
         
-        # Run YOLO prediction
         results = model.predict(image, conf=0.5)
         
         if len(results) > 0 and len(results[0].boxes) > 0:
@@ -56,30 +35,35 @@ async def classify(request: ImageRequest):
             conf = float(box.conf[0].item())
             label = results[0].names[cls_id]
             
-            return ClassificationResponse(
-                detected=True,
-                classification=label,
-                confidence=conf
-            )
+            return jsonify({
+                'detected': True,
+                'classification': label,
+                'confidence': conf
+            })
         else:
-            return ClassificationResponse(detected=False)
-            
+            return jsonify({
+                'detected': False
+            })
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Classification error: {str(e)}"
-        )
+        return jsonify({
+            'detected': False,
+            'error': str(e)
+        }), 500
 
-@app.get("/")
-async def root():
-    return {"message": "Lettuce Classification API", "status": "running"}
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({
+        'status': 'healthy',
+        'model_loaded': model is not None
+    })
 
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy", "model_loaded": model is not None}
+@app.route('/', methods=['GET'])
+def root():
+    return jsonify({
+        'message': 'Lettuce Classification API',
+        'status': 'running'
+    })
 
-if __name__ == "__main__":
-    import os
-    import uvicorn
-    port = int(os.getenv("PORT", 5000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+if __name__ == '__main__':
+    port = int(os.getenv('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
