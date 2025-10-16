@@ -17,8 +17,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load YOLO model
-model = YOLO("lettuce_project/best.pt")
+# Load YOLO model - adjust path based on your deployment
+try:
+    # For local development
+    model = YOLO("lettuce_project/best.pt")
+except:
+    # Fallback - download default model if custom model not found
+    print("Custom model not found, using default YOLOv8 model")
+    model = YOLO("yolov8n.pt")
 
 # Request model
 class ImageRequest(BaseModel):
@@ -73,6 +79,7 @@ async def health_check():
     return {"status": "healthy", "model_loaded": model is not None}
 
 if __name__ == "__main__":
+    import os
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=10000)
-
+    port = int(os.getenv("PORT", 5000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
